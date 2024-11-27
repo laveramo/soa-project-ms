@@ -1,4 +1,6 @@
 package fr.insa.app.ms.SingUpService.resources;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +37,10 @@ public class SignUpResource {
 	            return ResponseEntity.status(500).body("Error creating user");
 	        }
 	    }
+	    
+	    @GetMapping(value="users/")
+	    public List<User> users(){
+	    	return userRepository.findAll();
+	    }
 	
-
-
 }

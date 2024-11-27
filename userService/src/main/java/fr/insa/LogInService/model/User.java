@@ -1,4 +1,4 @@
-package fr.insa.userService.model;
+package fr.insa.LogInService.model;
 
 public class User {
 	private int userID;
