@@ -39,8 +39,9 @@ public class ListHelpRequestResource {
 	}
 	
 	
+	//Method to get a get a request submited by a specific user
 	@GetMapping(value = "/reqbyuser/{username}")
-	public ResponseEntity<?> getRequest(@PathVariable String username) {
+	public ResponseEntity<?> getRequestByuser(@PathVariable String username) {
 	    try {
 	        // Rechercher toutes les demandes liées à l'utilisateur
 	        List<HelpRequest> requests = hrRepository.findByRequestBy(username);
