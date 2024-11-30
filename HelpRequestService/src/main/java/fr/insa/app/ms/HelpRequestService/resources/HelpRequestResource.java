@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import fr.insa.app.ms.HelpRequestService.model.HelpRequest;
@@ -27,7 +29,7 @@ public class HelpRequestResource {
      @Value("${db.password}")
      private String dbPassword;
      
-	    @Autowired
+	    @Autowired //Injection automatique du repository 
 	    private HelpRequestRepository helpRequestRepository;
 
 	    @PostMapping
@@ -43,6 +45,25 @@ public class HelpRequestResource {
 	        } catch (Exception e) {
 	            e.printStackTrace();
 	            return ResponseEntity.status(500).body("Error creating HelpRequest");
+	        }
+	    }
+	    
+	    //pour tester : localhost:8084/api/helprequest/update?Status=Waiting&Title=pdla
+	    @PutMapping("/update")
+	    public ResponseEntity<String> UpdateHelpRequest(@RequestParam String Status, @RequestParam String Title) {
+	        try {
+	            // Rechercher le HelpRequest avec le titre donné
+	            HelpRequest helpRequest = helpRequestRepository.findByTitle(Title);
+	            if (helpRequest == null) {
+	                return ResponseEntity.badRequest().body("No HelpRequest found with the given title.");
+	            }
+	            // Mettre à jour le statut
+	            helpRequest.setStatus(Status);
+	            helpRequestRepository.save(helpRequest);
+	            return ResponseEntity.ok("HelpRequest updated successfully!");
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            return ResponseEntity.status(500).body("Error updating HelpRequest");
 	        }
 	    }
 
