@@ -49,7 +49,7 @@ public class HelpRequestResource {
 	    }
 	    
 	    //pour tester : localhost:8084/api/helprequest/update?Status=Waiting&Title=pdla
-	    @PutMapping("/update")
+	    @PutMapping("/update_Status")
 	    public ResponseEntity<String> UpdateHelpRequest(@RequestParam String Status, @RequestParam String Title) {
 	        try {
 	            // Rechercher le HelpRequest avec le titre donné
@@ -64,6 +64,26 @@ public class HelpRequestResource {
 	        } catch (Exception e) {
 	            e.printStackTrace();
 	            return ResponseEntity.status(500).body("Error updating HelpRequest");
+	        }
+	    }
+	    
+	    
+	  //pour tester : localhost:8084/api/helprequest/assign_volunteer?Volunteer=Donia&Title=pdla
+	    @PutMapping("/assign_volunteer")
+	    public ResponseEntity<String> AssignVolunteertoRequest(@RequestParam String Volunteer, @RequestParam String Title) {
+	        try {
+	            // Rechercher le HelpRequest avec le titre donné
+	            HelpRequest helpRequest = helpRequestRepository.findByTitle(Title);
+	            if (helpRequest == null) {
+	                return ResponseEntity.badRequest().body("No HelpRequest found with the given title.");
+	            }
+	            // Mettre à jour le statut
+	            helpRequest.setVolunteer(Volunteer);
+	            helpRequestRepository.save(helpRequest);
+	            return ResponseEntity.ok("Volunteer attributed successfully!");
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            return ResponseEntity.status(500).body("Error attributing Volunteer");
 	        }
 	    }
 
