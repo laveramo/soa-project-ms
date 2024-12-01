@@ -2,6 +2,7 @@ package fr.insa.app.ms.HelpRequestService.resources;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,19 +64,21 @@ public class HelpRequestResource {
 	        }
 	    }
 	    
-	    //pour tester : localhost:8084/api/helprequest/update?Status=Waiting&Title=pdla
+	    //pour tester : localhost:8086/api/helprequest/update?Status=Waiting&Title=pdla
 	    @PutMapping("/update_Status")
-	    public ResponseEntity<String> UpdateHelpRequest(@RequestParam String Status, @RequestParam String Title) {
+	    public ResponseEntity<String> UpdateHelpRequest(@RequestParam String Status, @RequestParam int Id) {
 	        try {
-	            // Rechercher le HelpRequest avec le titre donné
-	            HelpRequest helpRequest = helpRequestRepository.findByTitle(Title);
-	            if (helpRequest == null) {
-	                return ResponseEntity.badRequest().body("No HelpRequest found with the given title.");
-	            }
-	            // Mettre à jour le statut
-	            helpRequest.setStatus(Status);
-	            helpRequestRepository.save(helpRequest);
-	            return ResponseEntity.ok("HelpRequest updated successfully!");
+	            
+	        	Optional<HelpRequest> optionalHelpRequest = helpRequestRepository.findById((long) Id);
+
+	        	if (optionalHelpRequest.isEmpty()) {
+	        	    return ResponseEntity.badRequest().body("No HelpRequest found to update");
+	        	}
+	            
+	        	HelpRequest helpRequest = optionalHelpRequest.get();
+	        	helpRequest.setStatus(Status);
+	        	helpRequestRepository.save(helpRequest);
+	        	return ResponseEntity.ok("HelpRequest updated successfully!");
 	        } catch (Exception e) {
 	            e.printStackTrace();
 	            return ResponseEntity.status(500).body("Error updating HelpRequest");
@@ -83,16 +86,17 @@ public class HelpRequestResource {
 	    }
 	    
 	    
-	  //pour tester : localhost:8084/api/helprequest/assign_volunteer?Volunteer=Donia&Title=pdla
+	  //pour tester : localhost:8086/api/helprequest/assign_volunteer?Volunteer=Donia&Id=8
 	    @PutMapping("/assign_volunteer")
-	    public ResponseEntity<String> AssignVolunteertoRequest(@RequestParam String Volunteer, @RequestParam String Title) {
+	    public ResponseEntity<String> AssignVolunteertoRequest(@RequestParam String Volunteer, @RequestParam int Id) {
 	        try {
-	            // Rechercher le HelpRequest avec le titre donné
-	            HelpRequest helpRequest = helpRequestRepository.findByTitle(Title);
-	            if (helpRequest == null) {
+	        	Optional<HelpRequest> optionalHelpRequest = helpRequestRepository.findById((long) Id);
+
+	        	if (optionalHelpRequest.isEmpty()) {
 	                return ResponseEntity.badRequest().body("No HelpRequest found with the given title.");
 	            }
-	            // Mettre à jour le statut
+	            
+	        	HelpRequest helpRequest = optionalHelpRequest.get();
 	            helpRequest.setVolunteer(Volunteer);
 	            helpRequestRepository.save(helpRequest);
 	            return ResponseEntity.ok("Volunteer attributed successfully!");

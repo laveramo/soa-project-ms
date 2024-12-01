@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import fr.insa.app.ms.LogInService.model.Credentials;
 import fr.insa.app.ms.LogInService.model.User;
+import fr.insa.app.ms.LogInService.model.UserInfo;
 
 import org.springframework.http.ResponseEntity;
 
@@ -28,7 +29,7 @@ public class LogInResource {
 	private UserRepository userRepository;
 
 	@PostMapping
-	public ResponseEntity<String> getUser(@RequestBody Credentials credentials) {
+	public ResponseEntity<?> getUser(@RequestBody Credentials credentials) {
 		try {
 			System.out.println("Trying to login");
             User user = userRepository.findByEmail(credentials.getEmail()); // o findByUsername según tu caso
@@ -41,7 +42,9 @@ public class LogInResource {
                 return ResponseEntity.status(401).body("Invalid credentials");
             }
 
-            return ResponseEntity.ok("User logged in successfully!");
+            UserInfo userDTO = new UserInfo(user.getUserID(), user.getEmail(), user.getFirstName());
+
+            return ResponseEntity.ok(userDTO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(500).body("Could not login");
