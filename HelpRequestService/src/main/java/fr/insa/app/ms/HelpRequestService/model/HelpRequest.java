@@ -27,19 +27,19 @@ public class HelpRequest {
 
     private String Description;
 	
-	@Column(name = "Date", nullable = true)
+	@Column(name = "Date", nullable = false)
 	@JsonProperty("Date")
-    private Date Date ;
+    private Date Date  = new Date();
 	
-	@Column(name = "Status", nullable = false)
+	@Column(name = "Status", nullable = true)
 	@JsonProperty("Status")
-    private String Status;
+    private String Status = "Waiting";
 	
 	@Column(name = "RequestBy", nullable = false)
 	@JsonProperty("RequestBy")
     private String RequestBy ;
 	
-	@Column(name = "Volunteer", nullable = false)
+	@Column(name = "Volunteer", nullable = true)
 	@JsonProperty("Volunteer")
     private String Volunteer ;
 	
@@ -50,8 +50,8 @@ public class HelpRequest {
 			String volunteer) {
 		Title = title;
 		Description = description;
-		Date = date;
-		Status = status;
+		Date = (date != null) ? date : new Date();
+		Status = (status != null) ? status : "Waiting";
 		RequestBy = requestBy;
 		Volunteer = volunteer;
 	}
@@ -59,8 +59,8 @@ public class HelpRequest {
 	public HelpRequest(String title,java.util.Date date, String status, String requestBy,
 			String volunteer) {
 		Title = title;
-		Date = date;
-		Status = status;
+		Date = (date != null) ? date : new Date();
+		Status = (status != null) ? status : "Waiting";
 		RequestBy = requestBy;
 		Volunteer = volunteer;
 	}

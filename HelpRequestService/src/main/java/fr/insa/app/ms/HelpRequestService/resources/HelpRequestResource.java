@@ -1,5 +1,6 @@
 package fr.insa.app.ms.HelpRequestService.resources;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,13 +36,27 @@ public class HelpRequestResource {
 	    @PostMapping
 	    public ResponseEntity<String> createHelpRequest(@RequestBody HelpRequest helpRequest) {
 	        try {
-	            System.out.println("Received HelpRequest: " + helpRequest);
-	            System.out.println("Description: " + helpRequest.getDescription());
+	        	
+	        	if (helpRequest.getDate() == null) {
+	                helpRequest.setDate(new Date());
+	            }
+
+	            // Asignar "Waiting" si Status es nulo
+	            if (helpRequest.getStatus() == null || helpRequest.getStatus().isEmpty()) {
+	                helpRequest.setStatus("Waiting");
+	            }
+	            
 	            if (helpRequest.getDescription() == null || helpRequest.getDescription().isEmpty()) {
 	                return ResponseEntity.badRequest().body("Description cannot be null or empty.");
 	            }
+	            
+	            if (helpRequest.getRequestBy() == null || helpRequest.getRequestBy().isEmpty()) {
+	                return ResponseEntity.badRequest().body("RequestBy cannot be null or empty.");
+	            }
+	            
 	            helpRequestRepository.save(helpRequest);
 	            return ResponseEntity.ok("HelpRequest created successfully!");
+	            
 	        } catch (Exception e) {
 	            e.printStackTrace();
 	            return ResponseEntity.status(500).body("Error creating HelpRequest");

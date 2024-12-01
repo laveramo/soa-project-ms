@@ -89,11 +89,12 @@ public class HelpRequest {
 	}
 	
 	public String getStringDate() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
-        // Format the Date object to a String
-        String strDate = formatter.format(Date);
-        return strDate;
+        if (Date == null) {
+            return null; // O devuelve una cadena vacía si prefieres
+        }
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        return formatter.format(Date);
     }
 
 	public void setDate(Date date) {
