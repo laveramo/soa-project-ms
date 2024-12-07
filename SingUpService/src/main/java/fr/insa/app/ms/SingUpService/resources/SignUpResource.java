@@ -26,7 +26,7 @@ public class SignUpResource {
 	    @Autowired
 	    private UserRepository userRepository;
 
-	    @PostMapping
+	    @PostMapping(value="/create")
 	    public ResponseEntity<String> createUser( @RequestBody User user) {
 	        try {
 	            System.out.println("User received: " + user);
