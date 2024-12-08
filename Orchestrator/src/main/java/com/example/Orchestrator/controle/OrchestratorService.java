@@ -24,6 +24,7 @@ public class OrchestratorService {
 	@Autowired
     private RestTemplate restTemplate ;
 	private static final String USER_MANAGER_SERVICE_BASE_URL = "http://UserManagementService/api/manage";
+	private static final String HELPREQ_MANAGER_SERVICE_BASE_URL = "http://HelpReqManagService//api/helprequest";
     
     @PostMapping("/addUser")
     public ResponseEntity<String> addUser(@RequestBody User user) {
@@ -66,6 +67,58 @@ public class OrchestratorService {
         }
     }
     
+   // Appeler la méthode "users" pour récupérer tous les utilisateurs
+    @GetMapping("/getAllUsers")
+    public ResponseEntity<List> getAllUsers() {
+        try {
+            String url = USER_MANAGER_SERVICE_BASE_URL + "/users/";
+            List users = restTemplate.getForObject(url, List.class); // Récupération des utilisateurs sous forme de liste
+            return ResponseEntity.ok(users);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+    
+    
+ // Récupérer toutes les HelpRequest dont le statut est "Waiting"
+    @GetMapping("/getWaitingHelpRequests")
+    public ResponseEntity<List> getWaitingHelpRequests() {
+        try {
+            String url = HELPREQ_MANAGER_SERVICE_BASE_URL + "/waiting";
+            List helpRequests = restTemplate.getForObject(url, List.class);
+            return ResponseEntity.ok(helpRequests);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+
+    // Supprimer une HelpRequest par ID
+    @DeleteMapping("/deleteHelpRequest/{id}")
+    public ResponseEntity<String> deleteHelpRequest(@PathVariable("id") Long id) {
+        try {
+            String url = HELPREQ_MANAGER_SERVICE_BASE_URL + "/delete/" + id;
+            restTemplate.delete(url);
+            return ResponseEntity.ok("HelpRequest deleted successfully via Orchestrator!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error in Orchestrator while deleting HelpRequest");
+        }
+    }
+
+    // Récupérer toutes les HelpRequest soumises par un RequestBy
+    @GetMapping("/getHelpRequestsByRequester/{requestBy}")
+    public ResponseEntity<List> getHelpRequestsByRequester(@PathVariable("requestBy") String requestBy) {
+        try {
+            String url = HELPREQ_MANAGER_SERVICE_BASE_URL + "/by-requester/" + requestBy;
+            List helpRequests = restTemplate.getForObject(url, List.class);
+            return ResponseEntity.ok(helpRequests);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(null);
+        }
+    }
     
 }
 
