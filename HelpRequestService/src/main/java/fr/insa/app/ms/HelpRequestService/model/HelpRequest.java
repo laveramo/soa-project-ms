@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 
 
 @Entity
-@Table(name = "Help_request") // Vérifiez que le nom correspond à celui de votre table
+@Table(name = "Help_request") 
 public class HelpRequest {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
